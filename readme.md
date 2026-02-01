@@ -1,59 +1,104 @@
+# Console-Based Usage Invoicing System
 
-                    HOW TO RUN THE INVOICING APPLICATION
+A clean, maintainable Node.js console application that calculates usage-based charges for customers. It reads usage data from a JSON file, validates the input, applies tiered pricing logic, and generates detailed text-based invoices.
 
+## 🚀 Features
 
-PREREQUISITES
--------------
-- Node.js installed on your system
+*   **Robust Input Handling:** Validates JSON input for required fields and correct data types. Skips and reports malformed entries without crashing.
+*   **Tiered Pricing Calculation:**
+    *   **API Calls:** Tiered rates (Standard vs. Volume).
+    *   **Storage:** Linear pricing per GB.
+    *   **Compute Time:** Linear pricing per minute.
+*   **Detailed Output:** Prints formatted invoices for valid customers and descriptive warnings for invalid entries.
+*   **Modular Architecture:** Separation of concerns using distinct classes for Loading, Calculation, and Printing.
+*   **Flexible Execution:** Accepts custom input file paths via command-line arguments.
+*   **No External Dependencies:** Built using standard Node.js libraries (except for dev/testing tools if applicable).
 
+## 📂 Project Structure
 
-RUNNING THE APPLICATION
-------------------------
+```
+usage-invoicing_nodejs-JS/
+├── index.js                # Entry point: Orchestrates the flow
+├── InputLoader.js          # Handles file reading and data validation
+├── InvoiceCalculator.js    # Business logic for pricing rules
+├── InvoicePrinter.js       # Handles console formatting and output
+├── constants.js            # Centralized configuration for pricing rates
+├── InvoiceCalculator.test.js # Unit tests for calculation logic
+├── usage-data.json         # Default sample dataset
+├── usage-data-spec.json    # Edge-case dataset for testing
+├── problem.txt             # Original problem statement
+└── HOW_TO_RUN.txt          # Quick start guide
+```
 
-Step 1: Choose a Run Option
+## 🛠️ Prerequisites
 
-Option A - Run with default data file:
+*   [Node.js](https://nodejs.org/) (Version 12.x or higher recommended)
 
-    node index.js
+## 📥 Installation
 
-    Uses 'usage-data.json' by default.
+1.  Clone this repository or navigate to the project folder:
 
+2.  Install dependencies (if any):
+    ```bash
+    npm install
+    ```
+ 
+## 💻 Usage
 
-Option B - Run with specification test data:
+### 1. Run with Default Data
+Process the default `usage-data.json` file included in the root directory:
+```bash
+node index.js
+```
 
-    node index.js usage-data-spec.json
+### 2. Run with Custom Data
+Specify a path to your own JSON file:
+```bash
+node index.js ./my-custom-data.json
+```
 
+### 3. Run Tests
+Execute the unit tests to verify calculation logic:
+```bash
+npm test
+# OR
+node InvoiceCalculator.test.js
+```
 
-Option C - Run with your custom JSON file:
+## 📊 Pricing Model
 
-    node index.js path/to/your-file.json
+The application uses the following rates defined in `constants.js`:
 
+| Service | Rate |
+| :--- | :--- |
+| **API Calls** | First 10,000 calls: **$0.01** / call<br>Additional calls: **$0.008** / call |
+| **Storage** | **$0.25** per GB |
+| **Compute Time** | **$0.05** per minute |
 
-Step 2: View the Results
+## 📝 Input Format
 
-The application will display:
-    - Valid customer invoices with detailed charge breakdowns
-    - Invalid entry warnings for malformed data
-    - Processing summary with counts
+The input file must be a JSON array containing customer usage objects:
 
+```json
+[
+  {
+    "CustomerId": "CUST001",
+    "API_Calls": 8500,
+    "Storage_GB": 45.5,
+    "Compute_Minutes": 150
+  }
+]
+```
 
-RUNNING TESTS
--------------
+**Required Fields:**
+*   `CustomerId` (String)
+*   `API_Calls` (Number, >= 0)
+*   `Storage_GB` (Number, >= 0)
+*   `Compute_Minutes` (Number, >= 0)
 
-To run the unit tests:
+## 🔍 Example Output
 
-    npm test
-
-Or directly:
-
-    node InvoiceCalculator.test.js
-
-Expected output: ALL TESTS PASSED!
-
-
-EXAMPLE OUTPUT
---------------
-
+```text
 =============================
 USAGE-BASED INVOICING SYSTEM
 =============================
@@ -67,114 +112,16 @@ Skipped invalid entry: Missing or invalid API_Calls for CustomerId: CUST_BAD1
 
 Invoice for Customer: CUST001
 -----------------------------
-API Calls: 9500 calls -> $95.00
-Storage: 40 GB -> $10.00
-Compute Time: 100 minutes -> $5.00
+API Calls: 8500 calls -> $85.00
+Storage: 45.5 GB -> $11.38
+Compute Time: 150 minutes -> $7.50
 -----------------------------
-Total Due: $110.00
-
-Invoice for Customer: CUST002
------------------------------
-API Calls: 12000 calls -> $116.00
-Storage: 60.5 GB -> $15.13
-Compute Time: 240 minutes -> $12.00
------------------------------
-Total Due: $143.13
+Total Due: $103.88
 
 =============================
 PROCESSING SUMMARY
 =============================
-Valid invoices generated: 3
-Invalid entries skipped: 2
+Valid invoices generated: 1
+Invalid entries skipped: 1
 =============================
-
-
-UNDERSTANDING THE OUTPUT
--------------------------
-
-Valid Invoices Section:
-    Each invoice shows:
-    - Customer ID
-    - API Calls count and charge (with tiered pricing)
-    - Storage GB and charge
-    - Compute minutes and charge
-    - Total amount due
-
-Invalid Entries Section:
-    Shows entries that were skipped with the reason:
-    - Missing required fields
-    - Invalid data types (e.g., strings instead of numbers)
-    - Null values
-
-Processing Summary:
-    Final count of:
-    - Valid invoices generated
-    - Invalid entries skipped
-
-
-TROUBLESHOOTING
----------------
-
-Issue                     Solution
------                     --------
-Cannot find module        Ensure you're in the correct directory:
-                         c:\laragon\www\TB-Test3
-
-File not found           Check your JSON file path is correct
-                         (use relative or absolute paths)
-
-Invalid JSON format      Verify JSON syntax - use a JSON validator
-                         if needed
-
-SyntaxError              Check that all JSON fields are properly
-                         quoted and comma-separated
-
-
-JSON DATA FORMAT
-----------------
-
-Your JSON file must contain an array of customer entries:
-
-[
-  {
-    "CustomerId": "CUST001",
-    "API_Calls": 8500,
-    "Storage_GB": 45.5,
-    "Compute_Minutes": 150
-  }
-]
-
-Required fields:
-    - CustomerId (string)
-    - API_Calls (number)
-    - Storage_GB (number)
-    - Compute_Minutes (number)
-
-
-PRICING INFORMATION
--------------------
-
-Service              Rate
--------              ----
-API Calls            First 10,000: $0.01/call
-                     Above 10,000: $0.008/call
-
-Storage              $0.25/GB
-
-Compute Time         $0.05/minute
-
-
-NEED MORE INFORMATION?
-----------------------
-
-See README.md for complete documentation including:
-    - Detailed architecture explanation
-    - Module descriptions
-    - Full API reference
-    - Contribution guidelines
-
-
-================================================================================
-                              END OF GUIDE
-================================================================================
-
+```

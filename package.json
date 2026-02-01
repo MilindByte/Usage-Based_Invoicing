@@ -1,0 +1,17 @@
+{
+    "name": "usage-based-invoicing-system",
+    "version": "1.0.0",
+    "description": "Console-based usage invoicing system that calculates customer charges",
+    "main": "index.js",
+    "scripts": {
+        "start": "node index.js",
+        "test": "node InvoiceCalculator.test.js"
+    },
+    "keywords": [
+        "invoicing",
+        "billing",
+        "console"
+    ],
+    "author": "",
+    "license": "MIT"
+}
